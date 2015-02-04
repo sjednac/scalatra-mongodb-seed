@@ -14,7 +14,10 @@ class LocationController(locationRepo: LocationRepository) extends ScalatraServl
   }
 
   get("/") {
-    locationRepo.all()
+    if (params.isDefinedAt("phrase"))
+      locationRepo.byTextPhrase(params("phrase"))
+    else
+      locationRepo.all()
   }
 
 }
