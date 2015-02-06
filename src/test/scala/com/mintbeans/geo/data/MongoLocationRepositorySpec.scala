@@ -43,5 +43,17 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
     }
   }
 
+  it should "return location by id" in new Test {
+    withMongo { mongoProps =>
+      val id1 = "54ca8eaf5f70df15a926b528"
+      collection.insert(MongoDBObject("_id" -> id1, "name" -> "Sopot", "latitude" -> 54.45, "longitude" -> 18.56), WriteConcern.Safe)
+
+      val id2 = "54ca8eb15f70df15a926b6ef"
+      collection.insert(MongoDBObject("_id" -> id2, "name" -> "Warsaw", "latitude" -> 52.23, "longitude" -> 21.01), WriteConcern.Safe)
+
+      val location = repository.byId(id2)
+      location.id should be(id2)
+    }
+  }
 
 }

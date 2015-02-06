@@ -1,3 +1,3 @@
 package com.mintbeans.geo.core
 
-case class Location(name: String, point: Point)
+case class Location(id: String, name: String, point: Point)

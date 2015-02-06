@@ -45,5 +45,19 @@ class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFa
     }
   }
 
+  it should "return a location by id" in {
+    val id = "12345"
+    val fixture = locationWithId(id)
+    (repository.byId _).expects(id).returning(fixture)
+
+    get(s"/locations/${id}") {
+      status should equal(200)
+
+      val response = parse(body)
+      val location = response.extract[Location]
+
+      location.id should be (id)
+    }
+  }
 
 }

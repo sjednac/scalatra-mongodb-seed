@@ -20,4 +20,8 @@ class LocationController(locationRepo: LocationRepository) extends ScalatraServl
       locationRepo.all()
   }
 
+  get("/:id") {
+    locationRepo.byId(params("id"))
+  }
+
 }
