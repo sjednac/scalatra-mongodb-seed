@@ -2,7 +2,7 @@ package com.mintbeans.geo.web
 
 import com.mintbeans.geo.core.LocationRepository
 import org.json4s.{DefaultFormats, Formats}
-import org.scalatra.ScalatraServlet
+import org.scalatra.{NotFound, Ok, ScalatraServlet}
 import org.scalatra.json.JacksonJsonSupport
 
 class LocationController(locationRepo: LocationRepository) extends ScalatraServlet with JacksonJsonSupport {
@@ -23,7 +23,10 @@ class LocationController(locationRepo: LocationRepository) extends ScalatraServl
   }
 
   get("/:id") {
-    locationRepo.byId(params("id"))
+    locationRepo.byId(params("id")) match {
+      case Some(l) => Ok(l)
+      case None => NotFound(s"Location not found: ${params("id")}")
+    }
   }
 
 }

@@ -17,8 +17,11 @@ class MongoLocationRepository(collection: MongoCollection) extends LocationRepos
     for (o <- collection) yield convert(o)
   }.toList
 
-  def byId(id: String): Location = {
-    convert(collection.findOneByID(new ObjectId(id)).get)
+  def byId(id: String): Option[Location] = {
+    collection.findOneByID(new ObjectId(id)) match {
+      case Some(document) => Some(convert(document))
+      case None => None
+    }
   }
 
   def byNameFragment(name: String): Seq[Location] = {
