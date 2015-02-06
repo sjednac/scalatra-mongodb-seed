@@ -28,6 +28,17 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
     }
   }
 
+  it should "return locations containing a given name fragment" in new Test {
+    withMongo { mongoProps =>
+      collection.insert(MongoDBObject("name" -> "Malaga", "latitude" -> 54.45, "longitude" -> 18.56), WriteConcern.Safe)
+      collection.insert(MongoDBObject("name" -> "Warsaw", "latitude" -> 52.23, "longitude" -> 21.01), WriteConcern.Safe)
+      collection.insert(MongoDBObject("name" -> "Bremal", "latitude" -> 0.0, "longitude" -> 0.0), WriteConcern.Safe)
+      collection.insert(MongoDBObject("name" -> "Palma Mallorca", "latitude" -> 0.0, "longitude" -> 0.0), WriteConcern.Safe)
+
+      repository.byNameFragment("mal") should have length (3)
+    }
+  }
+
   it should "return locations matching given text phrase" in new Test {
     withMongo { mongoPops =>
       collection.insert(MongoDBObject("name" -> "Sopot", "latitude" -> 54.45, "longitude" -> 18.56), WriteConcern.Safe)

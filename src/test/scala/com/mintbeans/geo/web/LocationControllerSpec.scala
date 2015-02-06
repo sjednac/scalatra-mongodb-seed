@@ -45,6 +45,21 @@ class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFa
     }
   }
 
+  it should "return a sequence of locations filtered by a name fragment" in {
+    val fixture = locations("Berlin", "Bern", "Bergen", "Bermuda")
+    val name = "ber"
+    (repository.byNameFragment _).expects(name).returning(fixture)
+
+    get("/locations", ("name", name)) {
+      status should equal(200)
+
+      val response = parse(body)
+      val locations = response.extract[List[Location]]
+
+      locations should have length (fixture.size)
+    }
+  }
+
   it should "return a location by id" in {
     val id = "12345"
     val fixture = locationWithId(id)

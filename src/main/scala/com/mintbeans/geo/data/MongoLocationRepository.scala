@@ -3,8 +3,8 @@ package com.mintbeans.geo.data
 import com.mintbeans.geo.core.{Location, LocationRepository, Point}
 import com.mongodb.DBObject
 import com.mongodb.casbah.MongoCollection
-import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.commons.Imports._
+import com.mongodb.casbah.commons.MongoDBObject
 
 class MongoLocationRepository(collection: MongoCollection) extends LocationRepository {
 
@@ -19,6 +19,10 @@ class MongoLocationRepository(collection: MongoCollection) extends LocationRepos
 
   def byId(id: String): Location = {
     convert(collection.findOneByID(new ObjectId(id)).get)
+  }
+
+  def byNameFragment(name: String): Seq[Location] = {
+    collection.find(MongoDBObject("name" -> s"(?i).*\\Q${name}\\E.*".r)).toList.map(o => convert(o))
   }
 
   def byTextPhrase(phrase: String): Seq[Location] = {
