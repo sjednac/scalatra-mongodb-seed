@@ -1,6 +1,7 @@
 package com.mintbeans.geo.web
 
 import com.mintbeans.geo.core.{Location, LocationFixtures, LocationRepository}
+import org.bson.types.ObjectId
 import org.json4s.jackson.JsonMethods._
 import org.json4s.{DefaultFormats, Formats, _}
 import org.scalamock.scalatest.MockFactory
@@ -9,7 +10,7 @@ import org.scalatra.test.scalatest.ScalatraSuite
 
 class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFactory with LocationFixtures {
 
-  implicit val jsonFormats: Formats = DefaultFormats
+  implicit val jsonFormats: Formats = DefaultFormats + Serializers.objectId
 
   val repository = mock[LocationRepository]
   val controller = new LocationController(repository)
@@ -61,7 +62,7 @@ class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFa
   }
 
   it should "return a location by id" in {
-    val id = "12345"
+    val id = new ObjectId("54ca8eaf5f70df15a926b528")
     val fixture = Some(locationWithId(id))
     (repository.byId _).expects(id).returning(fixture)
 
@@ -70,13 +71,12 @@ class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFa
 
       val response = parse(body)
       val location = response.extract[Location]
-
       location.id should be (id)
     }
   }
 
   it should "set status 404 when given location id does not exist" in {
-    val id = "12345"
+    val id = new ObjectId("54ca8eaf5f70df15a926b528")
     (repository.byId _).expects(id).returning(None)
 
     get(s"/locations/${id}") {

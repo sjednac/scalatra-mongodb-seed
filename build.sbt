@@ -20,6 +20,7 @@ libraryDependencies ++= {
     val jettyVersion      = "9.3.0.M1"
     val json4sVersion     = "3.2.9"
     val casbahVersion     = "2.8.0"
+    val salatVersion      = "1.9.9"
     val embedMongoVersion = "0.2.2"
     val macwireVersion    = "0.8.0"
     val slf4jVersion      = "1.7.7"
@@ -33,6 +34,7 @@ libraryDependencies ++= {
         "org.eclipse.jetty"         %   "jetty-server"                % jettyVersion,
         "org.eclipse.jetty"         %   "jetty-webapp"                % jettyVersion,
         "org.mongodb"               %%  "casbah-core"                 % casbahVersion,
+        "com.novus"                 %%  "salat"                       % salatVersion,
         "com.github.simplyscala"    %%  "scalatest-embedmongo"        % embedMongoVersion % "test",
         "com.softwaremill.macwire"  %%  "macros"                      % macwireVersion,
         "com.softwaremill.macwire"  %%  "runtime"                     % macwireVersion,

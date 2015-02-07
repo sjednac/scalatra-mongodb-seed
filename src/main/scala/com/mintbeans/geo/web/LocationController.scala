@@ -1,13 +1,13 @@
 package com.mintbeans.geo.web
 
 import com.mintbeans.geo.core.LocationRepository
-import org.json4s.{DefaultFormats, Formats}
-import org.scalatra.{NotFound, Ok, ScalatraServlet}
+import org.json4s._
 import org.scalatra.json.JacksonJsonSupport
+import org.scalatra.{NotFound, Ok, ScalatraServlet}
 
 class LocationController(locationRepo: LocationRepository) extends ScalatraServlet with JacksonJsonSupport {
 
-  protected implicit val jsonFormats: Formats = DefaultFormats
+  protected implicit val jsonFormats: Formats = DefaultFormats + Serializers.objectId
 
   before() {
     contentType = formats("json")
@@ -23,7 +23,7 @@ class LocationController(locationRepo: LocationRepository) extends ScalatraServl
   }
 
   get("/:id") {
-    locationRepo.byId(params("id")) match {
+    locationRepo.byId(new org.bson.types.ObjectId(params("id"))) match {
       case Some(l) => Ok(l)
       case None => NotFound(s"Location not found: ${params("id")}")
     }

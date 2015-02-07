@@ -1,35 +1,30 @@
 package com.mintbeans.geo.data
 
-import com.mintbeans.geo.core.{Location, LocationRepository, Point}
-import com.mongodb.DBObject
+import com.mintbeans.geo.core.{Location, LocationRepository}
 import com.mongodb.casbah.MongoCollection
 import com.mongodb.casbah.commons.Imports._
 import com.mongodb.casbah.commons.MongoDBObject
+import com.novus.salat._
 
-class MongoLocationRepository(collection: MongoCollection) extends LocationRepository {
-
-  private def convert(obj: DBObject): Location = Location(obj.get("_id").toString,
-                                                          obj.get("name").toString,
-                                                          Point(java.lang.Double.parseDouble(obj.get("latitude").toString),
-                                                                java.lang.Double.parseDouble(obj.get("longitude").toString)))
+class MongoLocationRepository(collection: MongoCollection) extends LocationRepository with SalatContext {
 
   def all(): Seq[Location] = {
-    for (o <- collection) yield convert(o)
-  }.toList
+    collection.find.toList.map(o => grater[Location].asObject(o))
+  }
 
-  def byId(id: String): Option[Location] = {
-    collection.findOneByID(new ObjectId(id)) match {
-      case Some(document) => Some(convert(document))
+  def byId(id: org.bson.types.ObjectId): Option[Location] = {
+    collection.findOneByID(id) match {
+      case Some(document) => Some(grater[Location].asObject(document))
       case None => None
     }
   }
 
   def byNameFragment(name: String): Seq[Location] = {
-    collection.find(MongoDBObject("name" -> s"(?i).*\\Q${name}\\E.*".r)).toList.map(o => convert(o))
+    collection.find(MongoDBObject("name" -> s"(?i).*\\Q${name}\\E.*".r)).toList.map(o => grater[Location].asObject(o))
   }
 
   def byTextPhrase(phrase: String): Seq[Location] = {
-    collection.find(MongoDBObject("$text" -> MongoDBObject("$search" -> phrase))).toList.map(o => convert(o))
+    collection.find(MongoDBObject("$text" -> MongoDBObject("$search" -> phrase))).toList.map(o => grater[Location].asObject(o))
   }
 
 }
