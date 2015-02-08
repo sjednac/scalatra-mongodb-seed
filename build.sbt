@@ -16,6 +16,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= {
     val configVersion     = "1.2.1"
+    val logbackVersion    = "1.1.1"
     val scalatraVersion   = "2.3.0"
     val jettyVersion      = "9.3.0.M1"
     val json4sVersion     = "3.2.9"
@@ -23,7 +24,6 @@ libraryDependencies ++= {
     val salatVersion      = "1.9.9"
     val embedMongoVersion = "0.2.2"
     val macwireVersion    = "0.8.0"
-    val slf4jVersion      = "1.7.7"
     val scalaMockVersion  = "3.2.1"
     Seq(
         "com.typesafe"              %   "config"                      % configVersion,
@@ -38,8 +38,7 @@ libraryDependencies ++= {
         "com.github.simplyscala"    %%  "scalatest-embedmongo"        % embedMongoVersion % "test",
         "com.softwaremill.macwire"  %%  "macros"                      % macwireVersion,
         "com.softwaremill.macwire"  %%  "runtime"                     % macwireVersion,
-        "org.slf4j"                 %   "slf4j-api"                   % slf4jVersion,
-        "org.slf4j"                 %   "slf4j-simple"                % slf4jVersion,
+        "ch.qos.logback"            %   "logback-classic"             % logbackVersion,
         "org.scalamock"             %%  "scalamock-scalatest-support" % scalaMockVersion % "test"
     )
 }

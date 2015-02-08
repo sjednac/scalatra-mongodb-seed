@@ -4,8 +4,10 @@ import com.typesafe.config.ConfigFactory
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.webapp.WebAppContext
+import org.slf4j.{Logger, LoggerFactory}
 
 object LocationProvider extends App with WebModule with DataModule {
+  val logger = LoggerFactory.getLogger(getClass)
   val config = ConfigFactory.load()
   val server = new Server(config.getInt("http.port"))
   val webCtx = new WebAppContext()
@@ -15,5 +17,6 @@ object LocationProvider extends App with WebModule with DataModule {
 
   server.setHandler(webCtx)
   server.start
+  logger.info("Server started.")
   server.join
 }
