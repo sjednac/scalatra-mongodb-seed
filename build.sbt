@@ -1,3 +1,5 @@
+import AssemblyKeys._
+
 name := "scalatra-microservice-seed"
 
 organization := "com.mintbeans"
@@ -5,6 +7,8 @@ organization := "com.mintbeans"
 version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.11.5"
+
+sbtVersion := "0.13.1"
 
 scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -50,3 +54,7 @@ initialCommands in console := """
 """
 
 Revolver.settings
+
+assemblySettings
+
+jarName in assembly := "location-provider.jar"

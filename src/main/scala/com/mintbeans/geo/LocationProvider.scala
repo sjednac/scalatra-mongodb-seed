@@ -1,3 +1,5 @@
+package com.mintbeans.geo
+
 import com.mintbeans.geo.data.DataModule
 import com.mintbeans.geo.web.WebModule
 import com.typesafe.config.ConfigFactory
