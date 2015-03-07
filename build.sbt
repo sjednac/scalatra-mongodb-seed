@@ -3,7 +3,7 @@ import DockerKeys._
 import sbtdocker.mutable.Dockerfile
 import sbtdocker.ImageName
 
-name := "scalatra-microservice-seed"
+name := "scalatra-mongodb-seed"
 
 organization := "com.mintbeans"
 

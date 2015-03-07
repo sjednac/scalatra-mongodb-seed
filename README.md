@@ -1,4 +1,4 @@
-# Scalatra Microservice Seed
+# Scalatra MongoDB Seed
 
 A seed for building [microservices](http://martinfowler.com/articles/microservices.html) with [Scalatra](http://www.scalatra.org/),
  [MongoDB](http://www.mongodb.org/) and [Docker](https://www.docker.com/).
@@ -19,11 +19,11 @@ You can verify the list of available images by running:
 
 A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
 
-    $ docker run -e MONGO_HOST=192.168.0.2 -p 8080:8080 com.mintbeans/scalatra-microservice-seed:v0.1-SNAPSHOT
+    $ docker run -e MONGO_HOST=192.168.0.2 -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
 A slightly more specific configuration can be setup as follows:
 
-    $ docker run -e MONGO_HOST=192.168.0.2 -e MONGO_PORT=27017 -e MONGO_DB=test -p 8080:8080 com.mintbeans/scalatra-microservice-seed:v0.1-SNAPSHOT
+    $ docker run -e MONGO_HOST=192.168.0.2 -e MONGO_PORT=27017 -e MONGO_DB=test -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
 To verify the setup, check `DOCKER_HOST` under the published port:
 
