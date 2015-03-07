@@ -1,4 +1,7 @@
 import AssemblyKeys._
+import DockerKeys._
+import sbtdocker.mutable.Dockerfile
+import sbtdocker.ImageName
 
 name := "scalatra-microservice-seed"
 
@@ -58,3 +61,35 @@ Revolver.settings
 assemblySettings
 
 jarName in assembly := "location-provider.jar"
+
+dockerSettings
+
+docker <<= (docker dependsOn assembly)
+
+dockerfile in docker := {
+    val artifact = (outputPath in assembly).value
+    val artifactTargetPath = s"/app/${artifact.name}"
+    val configFile = baseDirectory.value / "src" / "main" / "resources" / "docker.conf"
+    val configFileTargetPath = s"/app/application.conf"
+    val logbackFile = baseDirectory.value / "src" / "main" / "resources" / "logback.xml"
+    val logbackFileTargetPath = "/app/logback.xml"
+    new Dockerfile {
+        from("dockerfile/java")
+        add(artifact, artifactTargetPath)
+        add(configFile, configFileTargetPath)
+        add(logbackFile, logbackFileTargetPath)
+        env("MONGO_DB",   "test")
+        env("MONGO_HOST", "mongodb.example.com")
+        env("MONGO_PORT", "27017")
+        entryPoint("java",
+                  s"-Dconfig.file=${configFileTargetPath}",
+                  s"-Dlogback.configurationFile=${logbackFileTargetPath}",
+                   "-jar", artifactTargetPath)
+    }
+}
+
+imageName in docker := {
+    ImageName(namespace = Some(organization.value),
+              repository = name.value,
+              tag = Some("v" + version.value))
+}
