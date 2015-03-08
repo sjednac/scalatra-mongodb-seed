@@ -8,8 +8,10 @@ import com.novus.salat._
 
 class MongoLocationRepository(collection: MongoCollection) extends LocationRepository with SalatContext {
 
-  def all(): Seq[Location] = {
-    collection.find.toList.map(o => grater[Location].asObject(o))
+  def all(limit: Option[Int]): Seq[Location] = {
+    collection.find
+              .limit(limit.getOrElse(0))
+              .toList.map(o => grater[Location].asObject(o))
   }
 
   def byId(id: org.bson.types.ObjectId): Option[Location] = {
@@ -19,12 +21,16 @@ class MongoLocationRepository(collection: MongoCollection) extends LocationRepos
     }
   }
 
-  def byNameFragment(name: String): Seq[Location] = {
-    collection.find(MongoDBObject("name" -> s"(?i).*\\Q${name}\\E.*".r)).toList.map(o => grater[Location].asObject(o))
+  def byNameFragment(name: String, limit: Option[Int]): Seq[Location] = {
+    collection.find(MongoDBObject("name" -> s"(?i).*\\Q${name}\\E.*".r))
+              .limit(limit.getOrElse(0))
+              .toList.map(o => grater[Location].asObject(o))
   }
 
-  def byTextPhrase(phrase: String): Seq[Location] = {
-    collection.find(MongoDBObject("$text" -> MongoDBObject("$search" -> phrase))).toList.map(o => grater[Location].asObject(o))
+  def byTextPhrase(phrase: String, limit: Option[Int]): Seq[Location] = {
+    collection.find(MongoDBObject("$text" -> MongoDBObject("$search" -> phrase)))
+              .limit(limit.getOrElse(0))
+              .toList.map(o => grater[Location].asObject(o))
   }
 
 }

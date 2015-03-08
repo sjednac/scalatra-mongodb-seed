@@ -3,11 +3,25 @@ package com.mintbeans.geo.web
 import com.mintbeans.geo.core.LocationRepository
 import org.json4s._
 import org.scalatra.json.JacksonJsonSupport
-import org.scalatra.{NotFound, Ok, ScalatraServlet}
+import org.scalatra.{BadRequest, NotFound, Ok, ScalatraServlet}
 
 class LocationController(locationRepo: LocationRepository) extends ScalatraServlet with JacksonJsonSupport {
 
   protected implicit val jsonFormats: Formats = DefaultFormats + Serializers.objectId
+
+  val maxAllowedLimit = 100
+
+  private class LimitValidationException(msg: String) extends IllegalArgumentException(msg)
+
+  private def limit(params: org.scalatra.Params): Option[Int] = {
+    val l = params.getAsOrElse[Int]("limit", maxAllowedLimit)
+    if (l <= 0)
+      throw new LimitValidationException("Limit must be a positive integer.")
+    if (l > maxAllowedLimit)
+      throw new LimitValidationException(s"Maximum allowed limit: ${maxAllowedLimit}")
+
+    Some(l)
+  }
 
   before() {
     contentType = formats("json")
@@ -15,11 +29,11 @@ class LocationController(locationRepo: LocationRepository) extends ScalatraServl
 
   get("/") {
     if(params.isDefinedAt("name"))
-      locationRepo.byNameFragment(params("name"))
+      locationRepo.byNameFragment(params("name"), limit(params))
     else if (params.isDefinedAt("phrase"))
-      locationRepo.byTextPhrase(params("phrase"))
+      locationRepo.byTextPhrase(params("phrase"), limit(params))
     else
-      locationRepo.all()
+      locationRepo.all(limit(params))
   }
 
   get("/:id") {
@@ -29,4 +43,7 @@ class LocationController(locationRepo: LocationRepository) extends ScalatraServl
     }
   }
 
+  error {
+    case e: LimitValidationException => BadRequest(e.getMessage)
+  }
 }

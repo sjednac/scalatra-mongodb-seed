@@ -48,8 +48,9 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
 
   "MongoLocationRepository" should "return all locations" in new Test {
     withMongo { mongoProps =>
-      withLocations("Sopot", "Warsaw") {
-        repository.all() should have length (2)
+      withLocations("Sopot", "Warsaw", "Paris") {
+        repository.all() should have length (3)
+        repository.all(limit = Some(2)) should have length (2)
       }
     }
   }
@@ -58,6 +59,7 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
     withMongo { mongoProps =>
       withLocations("Malaga", "Warsaw", "Bremal", "Palma Mallorca") {
         repository.byNameFragment("mal") should have length (3)
+        repository.byNameFragment("mal", limit = Some(2)) should have length (2)
       }
     }
   }
@@ -67,6 +69,7 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
       withLocations("Sopot", "Warsaw", "New York", "New Delhi", "New Orleans") {
         withTextIndex("name") {
           repository.byTextPhrase("new") should have length (3)
+          repository.byTextPhrase("new", limit = Some(2)) should have length (2)
         }
       }
     }
