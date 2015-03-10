@@ -1,0 +1,14 @@
+[
+  { "name": "Amsterdam", "point": { "type": "Point", "coordinates": [ 4.763889, 52.308613 ] } },
+  { "name": "Barcelona", "point": { "type": "Point", "coordinates": [ 2.078463, 41.297077 ] } },
+  { "name": "Rome", "point": { "type": "Point", "coordinates": [ 12.2342, 41.7997 ] } },
+  { "name": "Gdansk", "point": { "type": "Point", "coordinates": [ 18.6, 54.4 ] } },
+  { "name": "Madrid", "point": { "type": "Point", "coordinates": [ -3.5667, 40.4667 ] } },
+  { "name": "Stockholm", "point": { "type": "Point", "coordinates": [ 16.91219, 58.788635 ] } },
+  { "name": "Paris", "point": { "type": "Point", "coordinates": [ 2.379444, 48.72333 ] } },
+  { "name": "London", "point": { "type": "Point", "coordinates": [ 0.2333, 51.8833 ] } },
+  { "name": "Moscow", "point": { "type": "Point", "coordinates": [ 37.4167, 55.9694 ] } },
+  { "name": "Berlin", "point": { "type": "Point", "coordinates": [ 13.5086, 52.5028 ] } },
+  { "name": "Oslo", "point": { "type": "Point", "coordinates": [ 10.258628, 59.186703 ] } },
+  { "name": "Warsaw", "point": { "type": "Point", "coordinates": [ 20.9667, 52.1667 ] } }
+]
