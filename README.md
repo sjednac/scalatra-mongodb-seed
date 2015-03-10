@@ -3,6 +3,11 @@
 A seed for building [microservices](http://martinfowler.com/articles/microservices.html) with [Scalatra](http://www.scalatra.org/),
  [MongoDB](http://www.mongodb.org/) and [Docker](https://www.docker.com/).
 
+Project goals and assumptions:
+
+   * provide a usable project template based on technologies, that are easily accessible for most **Java** developers (e.g. Scalatra and Jetty).
+   * showcase selected features of **Scala**, **sbt** and **Docker**.
+
 ## Development mode
 
 For rapid development feedback use the [sbt-revolver](https://github.com/spray/sbt-revolver) plugin:
