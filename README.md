@@ -3,6 +3,12 @@
 A seed for building [microservices](http://martinfowler.com/articles/microservices.html) with [Scalatra](http://www.scalatra.org/),
  [MongoDB](http://www.mongodb.org/) and [Docker](https://www.docker.com/).
 
+## Development mode
+
+For rapid development feedback use the [sbt-revolver](https://github.com/spray/sbt-revolver) plugin:
+
+    $ sbt ~re-start
+
 ## Deploying with Docker
 
 ### Preparing a Docker image
