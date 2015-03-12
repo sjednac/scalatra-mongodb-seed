@@ -11,8 +11,6 @@ version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.11.6"
 
-sbtVersion := "0.13.1"
-
 scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
 
 resolvers ++= Seq(
