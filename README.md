@@ -8,6 +8,12 @@ Project goals and assumptions:
    * provide a usable project template based on technologies, that are easily accessible for most **Java** developers (e.g. Scalatra and Jetty).
    * showcase selected features of **Scala**, **sbt** and **Docker**.
 
+## Prerequisites
+
+1. Install [SBT](http://www.scala-sbt.org/release/tutorial/Setup.html).
+2. Install [MongoDB](http://docs.mongodb.org/manual/installation/) and [load sample data](data/README.md) provided with the project.
+3. Install [Docker](https://docs.docker.com/installation/).
+
 ## Development mode
 
 For rapid development feedback use the [sbt-revolver](https://github.com/spray/sbt-revolver) plugin:
@@ -15,6 +21,12 @@ For rapid development feedback use the [sbt-revolver](https://github.com/spray/s
     $ sbt ~re-start
 
 ## Deploying with Docker
+
+Verify your Docker installation. When using `boot2docker`, start the virtual machine and run the Docker daemon by typing:
+
+    $ boot2docker start
+
+then set up environment variables: `DOCKER_TLS_VERIFY`, `DOCKER_HOST` and `DOCKER_CERT_PATH`.
 
 ### Preparing a Docker image
 
@@ -28,7 +40,7 @@ You can verify the list of available images by running:
 
 ### Running the image in a new Docker container
 
-A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
+Create a new Docker container and run freshly prepared image. A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
 
     $ docker run -e MONGO_HOST=192.168.0.2 -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
@@ -39,6 +51,8 @@ A slightly more specific configuration can be setup as follows:
 To verify the setup, check `DOCKER_HOST` under the published port:
 
     $ curl -v http://DOCKER_HOST:8080/locations
+
+*Note: Remember that Docker has its own network namespace, so MongoDB instance available at `MONGO_HOST` should be visible from Docker container. When running locally both Docker and MongoDB, you might probably want to pass `MONGO_HOST` equal to `DOCKER_HOST`.*
 
 ### Changing Logback configuration at runtime
 
