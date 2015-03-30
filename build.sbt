@@ -54,7 +54,7 @@ initialCommands in console := """
     import collection.JavaConversions._
 """
 
-Revolver.settings
+Revolver.settings:Seq[sbt.Setting[_]]
 
 assemblySettings
 
@@ -77,7 +77,7 @@ dockerfile in docker := {
         add(configFile, configFileTargetPath)
         add(logbackFile, logbackFileTargetPath)
         env("MONGO_DB",   "test")
-        env("MONGO_HOST", "mongodb.example.com")
+        env("MONGO_HOST", "localhost")
         env("MONGO_PORT", "27017")
         entryPoint("java",
                   s"-Dconfig.file=${configFileTargetPath}",
