@@ -45,7 +45,7 @@ First you need to run a separate Docker container with the mongodb server. To do
 
 A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
 
-    $ docker run -i mongo:latest
+    $ docker run -v <local-mongodb-path>:/data/db -i mongo:latest
 
 Then you need the IP address of the mongo container. To do this, type `docker ps` and note the ID of the running container, then type (replace `$CID` with the mongo container ID):
 
