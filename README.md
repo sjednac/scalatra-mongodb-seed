@@ -43,7 +43,13 @@ You can verify the list of available images by running:
 Create a new Docker container and run freshly prepared image. 
 First you need to run a separate Docker container with the mongodb server. To do this simply run:
 
-    $ docker run -v <local-mongodb-path>:/data/db -i mongo:latest
+    $ docker run -i mongo:latest
+
+Or if you want to attach a volume from the host machine (for persistance) run:
+
+    $ docker run -v <local-path>:/data/db -i mongo:latest
+
+where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the mongo Docker container.
 
 Then you need the IP address of the mongo container. To do this, type `docker ps` and note the ID of the running container, then type (replace `$CID` with the mongo container ID):
 
