@@ -11,8 +11,10 @@ Project goals and assumptions:
 ## Prerequisites
 
 1. Install [SBT](http://www.scala-sbt.org/release/tutorial/Setup.html).
-2. Install [MongoDB](http://docs.mongodb.org/manual/installation/) and [load sample data](data/README.md) provided with the project.
-3. Install [Docker](https://docs.docker.com/installation/).
+2. Install [Docker](https://docs.docker.com/installation/).
+
+*Note: [MongoDB](http://docs.mongodb.org/manual/installation/) installation is optional, since you can launch a server instance using a
+public Docker [image](https://registry.hub.docker.com/_/mongo/).*
 
 ## Development mode
 
@@ -40,14 +42,18 @@ You can verify the list of available images by running:
 
 ### Running the image in a new Docker container
 
-Create a new Docker container and run freshly prepared image. 
-First you need to run a separate Docker container with the mongodb server. To do this simply run:
+#### Launching MongoDB
 
-    $ docker run -i mongo:latest
+You need a MongoDB instance and some [sample data](data/) to get started. We assume a separate Docker container
+in this step, therefore you can safely skip to the next part, if you have a standalone server already in place.
 
-Or if you want to attach a volume from the host machine (for persistance) run:
+To launch a MongoDB server using Docker run:
 
-    $ docker run -v <local-path>:/data/db -i mongo:latest
+    $ docker run -p 27017:27017 -i mongo:latest
+
+Or if you want to attach a volume from the host machine (for persistence) run:
+
+    $ docker run -v <local-path>:/data/db -p 27017:27017 -i mongo:latest
 
 where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the mongo Docker container.
 
@@ -55,13 +61,15 @@ Then you need the IP address of the mongo container. To do this, type `docker ps
 
     $ docker inspect $CID | grep IPAddress | cut -d '"' -f 4 
 
-Now you have the mongodb Docker container IP address and is turn to run our *dockerized* application. A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
+#### Launching application
+
+Now that you have the mongo container IP address it is turn to run our *dockerized* application. A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
 
     $ docker run -e MONGO_HOST=<mongo-container-ip> -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
 A slightly more specific configuration can be setup as follows:
 
-    $ docker run -e MONGO_HOST=<mongo-container-ip> -e MONGO_PORT=27017 -e MONGO_DB=test -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
+    $ docker run -e MONGO_HOST=<mongo-container-ip> -e MONGO_PORT=<exposed-port> -e MONGO_DB=test -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
 To verify the setup, check `DOCKER_HOST` under the published port:
 
