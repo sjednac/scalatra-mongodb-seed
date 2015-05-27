@@ -55,7 +55,9 @@ Or if you want to attach a volume from the host machine (for persistence) run:
 
     $ docker run -v <local-path>:/data/db -p 27017:27017 -i mongo:latest
 
-where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the mongo Docker container.
+where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the mongo Docker
+container. *Note: when using `boot2docker`, this directory is referring to the spawned virtual machine, not your
+development box.*
 
 Then you need the IP address of the mongo container. To do this, type `docker ps` and note the ID of the running container, then type (replace `$CID` with the mongo container ID):
 
