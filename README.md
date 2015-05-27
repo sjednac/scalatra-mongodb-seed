@@ -24,11 +24,18 @@ For rapid development feedback use the [sbt-revolver](https://github.com/spray/s
 
 ## Deploying with Docker
 
-Verify your Docker installation. When using `boot2docker`, start the virtual machine and run the Docker daemon by typing:
+Verify your Docker installation. When using `boot2docker`, start the virtual machine and run the **Docker** daemon by:
 
     $ boot2docker start
 
-then set up environment variables: `DOCKER_TLS_VERIFY`, `DOCKER_HOST` and `DOCKER_CERT_PATH`.
+Make sure, that `DOCKER_TLS_VERIFY`, `DOCKER_HOST` and `DOCKER_CERT_PATH` are set before you proceed. A basic initialisation
+script (e.g. `~/.profile`) could be as follows:
+
+    export DOCKER_HOST=tcp://<boot2docker_vm_ip>:2376
+    export DOCKER_CERT_PATH=$HOME/.boot2docker/certs/boot2docker-vm
+    export DOCKER_TLS_VERIFY=1
+
+The `boot2docker_vm_ip` address should be taken from the VM (you can use `boot2docker ssh ifconfig` to find it out)).
 
 ### Preparing a Docker image
 
@@ -44,10 +51,10 @@ You can verify the list of available images by running:
 
 #### Launching MongoDB
 
-You need a MongoDB instance and some [sample data](data/) to get started. We assume a separate Docker container
+You'll need a MongoDB instance and some [sample data](data/) to get started. We assume a separate Docker container
 in this step, therefore you can safely skip to the next part, if you have a standalone server already in place.
 
-To launch a MongoDB server using Docker run:
+To launch a MongoDB server using Docker, run:
 
     $ docker run -p 27017:27017 -i mongo:latest
 
@@ -77,7 +84,7 @@ To verify the setup, check `DOCKER_HOST` under the published port:
 
     $ curl -v http://DOCKER_HOST:8080/locations
 
-*Note: Remember that Docker has its own network namespace, so MongoDB instance available at `MONGO_HOST` should be visible from Docker container. When running locally both Docker and MongoDB, you might probably want to pass `MONGO_HOST` equal to `DOCKER_HOST`.*
+*Note: Remember that Docker has its own network namespace, so MongoDB instance available at `MONGO_HOST` should be visible from the Docker container. When running locally both Docker and MongoDB, you might probably want to pass `MONGO_HOST` equal to `DOCKER_HOST`.*
 
 ### Changing Logback configuration at runtime
 
