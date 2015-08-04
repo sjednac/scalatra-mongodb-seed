@@ -35,7 +35,7 @@ script (e.g. `~/.profile`) could be as follows:
     export DOCKER_CERT_PATH=$HOME/.boot2docker/certs/boot2docker-vm
     export DOCKER_TLS_VERIFY=1
 
-The `boot2docker_vm_ip` address should be taken from the VM (you can use `boot2docker ssh ifconfig` to find it out)).
+The `boot2docker_vm_ip` address should be taken from the VM (you can use `boot2docker ssh ifconfig` to find it out).
 
 ### Preparing a Docker image
 
@@ -58,21 +58,22 @@ To launch a MongoDB server using Docker, run:
 
     $ docker run -p 27017:27017 -i mongo:latest
 
-Or if you want to attach a volume from the host machine (for persistence) run:
+Or if you want to attach a volume from the host machine (for persistence), run:
 
     $ docker run -v <local-path>:/data/db -p 27017:27017 -i mongo:latest
 
-where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the mongo Docker
-container. *Note: when using `boot2docker`, this directory is referring to the spawned virtual machine, not your
+where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the `mongo` container. *Note: when using `boot2docker`, this directory is referring to the spawned virtual machine, not your
 development box.*
 
-Then you need the IP address of the mongo container. To do this, type `docker ps` and note the ID of the running container, then type (replace `$CID` with the mongo container ID):
+You'll need the IP address of the `mongo` container for the application setup in the next step. To find it out, run `docker ps` and note the ID of the running container. 
+
+You should be able to retrieve the IP by executing (replace `$CID` with the mongo container ID):
 
     $ docker inspect $CID | grep IPAddress | cut -d '"' -f 4 
 
 #### Launching application
 
-Now that you have the mongo container IP address it is turn to run our *dockerized* application. A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
+Now that you have the `mongo` container IP address it is turn to run our *dockerized* application. A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
 
     $ docker run -e MONGO_HOST=<mongo-container-ip> -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
