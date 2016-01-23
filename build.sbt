@@ -49,10 +49,6 @@ libraryDependencies ++= {
 
 mainClass := Some("com.mintbeans.geo.LocationProvider")
 
-initialCommands in console := """
-    import collection.JavaConversions._
-"""
-
 Revolver.settings:Seq[sbt.Setting[_]]
 
 assemblySettings
