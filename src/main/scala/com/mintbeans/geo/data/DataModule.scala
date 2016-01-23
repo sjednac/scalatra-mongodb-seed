@@ -2,7 +2,7 @@ package com.mintbeans.geo.data
 
 import com.mintbeans.geo.core.LocationRepository
 import com.mongodb.casbah.MongoClient
-import com.softwaremill.macwire.MacwireMacros._
+import com.softwaremill.macwire._
 import com.typesafe.config.Config
 import org.slf4j.LoggerFactory
 

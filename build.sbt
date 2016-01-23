@@ -28,7 +28,7 @@ libraryDependencies ++= {
     val casbahVersion     = "3.1.0"
     val salatVersion      = "1.9.9"
     val embedMongoVersion = "0.2.2"
-    val macwireVersion    = "0.8.0"
+    val macwireVersion    = "2.2.2"
     val scalaMockVersion  = "3.2.1"
     Seq(
         "com.typesafe"              %   "config"                      % configVersion,
@@ -42,7 +42,6 @@ libraryDependencies ++= {
         "com.novus"                 %%  "salat"                       % salatVersion,
         "com.github.simplyscala"    %%  "scalatest-embedmongo"        % embedMongoVersion % "test",
         "com.softwaremill.macwire"  %%  "macros"                      % macwireVersion,
-        "com.softwaremill.macwire"  %%  "runtime"                     % macwireVersion,
         "ch.qos.logback"            %   "logback-classic"             % logbackVersion,
         "org.scalamock"             %%  "scalamock-scalatest-support" % scalaMockVersion % "test"
     )

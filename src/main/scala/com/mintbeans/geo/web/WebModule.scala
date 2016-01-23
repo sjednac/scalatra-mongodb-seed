@@ -1,7 +1,7 @@
 package com.mintbeans.geo.web
 
 import com.mintbeans.geo.core.LocationRepository
-import com.softwaremill.macwire.MacwireMacros._
+import com.softwaremill.macwire._
 
 trait WebModule {
 
