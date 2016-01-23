@@ -67,7 +67,7 @@ dockerfile in docker := {
     val logbackFile = baseDirectory.value / "src" / "main" / "resources" / "logback.xml"
     val logbackFileTargetPath = "/app/logback.xml"
     new Dockerfile {
-        from("java:7")
+        from("java:8")
         add(artifact, artifactTargetPath)
         add(configFile, configFileTargetPath)
         add(logbackFile, logbackFileTargetPath)
