@@ -29,9 +29,9 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
       testFun
     }
 
-    def withLocationIDs(ids: String*)(testFun: => Unit) = new LocationFixtures {
+    def withLocationIDs(ids: ObjectId*)(testFun: => Unit) = new LocationFixtures {
       ids.foreach({ id =>
-        collection.insert(grater[Location].asDBObject(locationWithId(new ObjectId(id))), WriteConcern.Safe)
+        collection.insert(grater[Location].asDBObject(locationWithId(id)), WriteConcern.Safe)
       })
 
       testFun
@@ -77,10 +77,10 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
 
   it should "return location by id" in new Test {
     withMongo { mongoProps =>
-      val id1 = "54ca8eaf5f70df15a926b528"
-      val id2 = "54ca8eb15f70df15a926b6ef"
+      val id1 = new ObjectId("54ca8eaf5f70df15a926b528")
+      val id2 = new ObjectId("54ca8eb15f70df15a926b6ef")
       withLocationIDs(id1, id2) {
-        val location = repository.byId(new ObjectId(id1))
+        val location = repository.byId(id1)
         location.get.id should be(id1)
       }
     }
