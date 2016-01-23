@@ -5,95 +5,86 @@ A seed for building [microservices](http://martinfowler.com/articles/microservic
 
 Project goals and assumptions:
 
-   * provide a usable project template based on technologies, that are easily accessible for most **Java** developers (e.g. Scalatra and Jetty).
+   * provide a project template based on technologies, that are easily accessible for most **Java** developers (e.g. Scalatra and Jetty).
    * showcase selected features of **Scala**, **sbt** and **Docker**.
-
-## Prerequisites
-
-1. Install [SBT](http://www.scala-sbt.org/release/tutorial/Setup.html).
-2. Install [Docker](https://docs.docker.com/installation/).
-
-*Note: [MongoDB](http://docs.mongodb.org/manual/installation/) installation is optional, since you can launch a server instance using a
-public Docker [image](https://registry.hub.docker.com/_/mongo/).*
 
 ## Development mode
 
 For rapid development feedback use the [sbt-revolver](https://github.com/spray/sbt-revolver) plugin:
 
-    $ sbt ~re-start
+    sbt ~re-start
 
-## Deploying with Docker
+It will respawn the server process whenever a project file changes and a fresh build is required. 
 
-Verify your Docker installation. When using `boot2docker`, start the virtual machine and run the **Docker** daemon by:
+## Docker deployment
 
-    $ boot2docker start
+This section provides a step-by-step guide for hosting the service in a virtual **Docker** environment, including a standalone **MongoDB** instance. Prerequisites:
 
-Make sure, that `DOCKER_TLS_VERIFY`, `DOCKER_HOST` and `DOCKER_CERT_PATH` are set before you proceed. A basic initialisation
-script (e.g. `~/.profile`) could be as follows:
+1. Install [Docker](https://docs.docker.com/installation/). 
+2. Install [Docker Machine](https://docs.docker.com/machine/), if it isn't included in the Docker distribution (useful for managing multiple servers in your local environment). 
 
-    export DOCKER_HOST=tcp://<boot2docker_vm_ip>:2376
-    export DOCKER_CERT_PATH=$HOME/.boot2docker/certs/boot2docker-vm
-    export DOCKER_TLS_VERIFY=1
+### Create virtual Docker servers
 
-The `boot2docker_vm_ip` address should be taken from the VM (you can use `boot2docker ssh ifconfig` to find it out)).
+Create a virtual machine for each component of the system:
 
-### Preparing a Docker image
+    docker-machine create --driver virtualbox service1
+    docker-machine create --driver virtualbox mongo1
+
+### Setup MongoDB
+
+You'll need a MongoDB instance and some [sample data](data/) to get started. Make sure, that your Docker client is connecting to the Mongo server:
+
+    eval "$(docker-machine env mongo1)"
+    
+Spawn a new Mongo process:
+
+    docker run -d --restart=always --name mongo -p 27017:27017 mongo:latest    
+
+You can test your connection from your development box by running:
+
+    mongo $(docker-machine ip mongo1)/test
+
+Don't worry, if you don't have a Mongo client available locally. You can always launch it directly in the container: 
+
+    docker exec -it mongo mongo test
+
+Import sample data and create some custom indexes:
+
+    docker exec -i mongo mongoimport -d test -c locations --jsonArray < data/sample_locations.json
+    docker exec -i mongo mongo test < data/sample_location_indexes.js
+    
+### Deploy an application image
+
+Switch your Docker client to the target environment: 
+
+    eval "$(docker-machine env service1)"
 
 Build an image using the [sbt-docker](https://github.com/marcuslonnberg/sbt-docker) plugin:
 
-    $ sbt docker
+    sbt docker
 
 You can verify the list of available images by running:
 
-    $ docker images
+    docker images
 
-### Running the image in a new Docker container
+Run the image in a new Docker container as such:
 
-#### Launching MongoDB
+    docker run \
+            --name=location-provider \
+            -d --restart=always \
+            -e MONGO_HOST=$(docker-machine ip mongo1) \
+            -e MONGO_PORT=27017 \
+            -e MONGO_DB=test \
+            -p 8080:8080 \
+            com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
 
-You'll need a MongoDB instance and some [sample data](data/) to get started. We assume a separate Docker container
-in this step, therefore you can safely skip to the next part, if you have a standalone server already in place.
+The `-d` switch implies detaching the process from the current session. You can always follow the logs by executing:
 
-To launch a MongoDB server using Docker, run:
+    docker logs -f location-provider
 
-    $ docker run -p 27017:27017 -i mongo:latest
+Check if everything works correctly by fetching the list of locations:
 
-Or if you want to attach a volume from the host machine (for persistence) run:
-
-    $ docker run -v <local-path>:/data/db -p 27017:27017 -i mongo:latest
-
-where `<local-path>` is a folder on the host machine that will be linked to the `/data/db` folder in the mongo Docker
-container. *Note: when using `boot2docker`, this directory is referring to the spawned virtual machine, not your
-development box.*
-
-Then you need the IP address of the mongo container. To do this, type `docker ps` and note the ID of the running container, then type (replace `$CID` with the mongo container ID):
-
-    $ docker inspect $CID | grep IPAddress | cut -d '"' -f 4 
-
-#### Launching application
-
-Now that you have the mongo container IP address it is turn to run our *dockerized* application. A minimal setup will require a `MONGO_HOST` variable to be passed to the container:
-
-    $ docker run -e MONGO_HOST=<mongo-container-ip> -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
-
-A slightly more specific configuration can be setup as follows:
-
-    $ docker run -e MONGO_HOST=<mongo-container-ip> -e MONGO_PORT=<exposed-port> -e MONGO_DB=test -p 8080:8080 com.mintbeans/scalatra-mongodb-seed:v0.1-SNAPSHOT
-
-To verify the setup, check `DOCKER_HOST` under the published port:
-
-    $ curl -v http://DOCKER_HOST:8080/locations
-
-*Note: Remember that Docker has its own network namespace, so MongoDB instance available at `MONGO_HOST` should be visible from the Docker container. When running locally both Docker and MongoDB, you might probably want to pass `MONGO_HOST` equal to `DOCKER_HOST`.*
-
-### Changing Logback configuration at runtime
-
-The image should include a `logback.xml` file with configuration [scanning](http://logback.qos.ch/manual/configuration.html#autoScan) enabled. You can alter most logging settings by following these steps:
-
-    $ docker ps
-    $ docker exec -it <container-id> bash
-    [ root@23b382f59781:/data ]$ vim /app/logback.xml
-    [ root@23b382f59781:/data ]$ exit
+    curl -v http://$(docker-machine ip service1):8080/locations
 
 ## Links
 
