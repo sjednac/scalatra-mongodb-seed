@@ -1,4 +1,4 @@
-# Scalatra MongoDB Seed
+# Scalatra MongoDB Seed [![Build Status](https://travis-ci.org/sbilinski/scalatra-mongodb-seed.svg?branch=master)](https://travis-ci.org/sbilinski/scalatra-mongodb-seed) [![Codacy Badge](https://www.codacy.com/project/badge/cd005fb9e3ad402eb5b567da4687a356)](https://www.codacy.com/app/sbilinski/scalatra-mongodb-seed)
 
 A seed for building [microservices](http://martinfowler.com/articles/microservices.html) with [Scalatra](http://www.scalatra.org/),
  [MongoDB](http://www.mongodb.org/) and [Docker](https://www.docker.com/).
