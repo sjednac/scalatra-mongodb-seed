@@ -20,7 +20,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= {
-    val configVersion     = "1.2.1"
+    val configVersion     = "1.3.0"
     val logbackVersion    = "1.1.1"
     val scalatraVersion   = "2.3.0"
     val jettyVersion      = "9.3.0.M1"
