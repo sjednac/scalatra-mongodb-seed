@@ -1,8 +1,3 @@
-import AssemblyKeys._
-import DockerKeys._
-import sbtdocker.mutable.Dockerfile
-import sbtdocker.ImageName
-
 name := "scalatra-mongodb-seed"
 
 organization := "com.mintbeans"
@@ -12,6 +7,8 @@ version := "0.1-SNAPSHOT"
 scalaVersion := "2.11.7"
 
 scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation", "-encoding", "utf8")
+
+mainClass := Some("com.mintbeans.geo.LocationProvider")
 
 resolvers ++= Seq(
     "Sonatype Snapshots"  at "https://oss.sonatype.org/content/repositories/snapshots/",
@@ -52,13 +49,26 @@ libraryDependencies ++= {
 //
 updateOptions := updateOptions.value.withCachedResolution(true)
 
-mainClass := Some("com.mintbeans.geo.LocationProvider")
-
+//
+// Revolver
+//
 Revolver.settings:Seq[sbt.Setting[_]]
+
+//
+// Assembly
+//
+import AssemblyKeys._
 
 assemblySettings
 
 jarName in assembly := "location-provider.jar"
+
+//
+// Docker
+//
+import DockerKeys._
+import sbtdocker.mutable.Dockerfile
+import sbtdocker.ImageName
 
 dockerSettings
 
