@@ -3,7 +3,7 @@ package com.mintbeans.geo.web
 import com.mintbeans.geo.core.{Location, LocationRepository}
 import org.json4s._
 import org.scalatra.json.JacksonJsonSupport
-import org.scalatra.{BadRequest, NotFound, Ok, ScalatraServlet}
+import org.scalatra._
 import org.scalatra.swagger._
 
 class LocationController(locationRepo: LocationRepository, implicit val swagger: Swagger) extends ScalatraServlet with JacksonJsonSupport with SwaggerSupport {
@@ -13,18 +13,6 @@ class LocationController(locationRepo: LocationRepository, implicit val swagger:
   protected implicit val jsonFormats: Formats = DefaultFormats + Serializers.objectId
 
   val maxAllowedLimit = 100
-
-  private class LimitValidationException(msg: String) extends IllegalArgumentException(msg)
-
-  private def limit(params: org.scalatra.Params): Option[Int] = {
-    val l = params.getAsOrElse[Int]("limit", maxAllowedLimit)
-    if (l <= 0)
-      throw new LimitValidationException("Limit must be a positive integer.")
-    if (l > maxAllowedLimit)
-      throw new LimitValidationException(s"Maximum allowed limit: ${maxAllowedLimit}")
-
-    Some(l)
-  }
 
   val list = (
     apiOperation[List[Location]]("list")
@@ -47,12 +35,18 @@ class LocationController(locationRepo: LocationRepository, implicit val swagger:
   }
 
   get("/", operation(list)) {
-    if(params.isDefinedAt("name"))
-      locationRepo.byNameFragment(params("name"), limit(params))
-    else if (params.isDefinedAt("phrase"))
-      locationRepo.byTextPhrase(params("phrase"), limit(params))
-    else
-      locationRepo.all(limit(params))
+    params.getAsOrElse[Int]("limit", maxAllowedLimit) match {
+      case limit if limit <= 0 => BadRequest("Limit must be a positive integer.")
+      case limit if limit > maxAllowedLimit => BadRequest(s"Maximum allowed limit: ${maxAllowedLimit}")
+      case limit => {
+        if(params.isDefinedAt("name"))
+          locationRepo.byNameFragment(params("name"), Some(limit))
+        else if (params.isDefinedAt("phrase"))
+          locationRepo.byTextPhrase(params("phrase"), Some(limit))
+        else
+          locationRepo.all(Some(limit))
+      }
+    }
   }
 
   get("/:id", operation(byId)) {
@@ -63,6 +57,6 @@ class LocationController(locationRepo: LocationRepository, implicit val swagger:
   }
 
   error {
-    case e: LimitValidationException => BadRequest(e.getMessage)
+    case e: com.mongodb.MongoException => ServiceUnavailable(e.getMessage)
   }
 }

@@ -151,4 +151,13 @@ class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFa
       status should equal(404)
     }
   }
+
+  it should "set status 503 when Mongo is unavailable" in {
+    (repository.all _).expects(Some(controller.maxAllowedLimit)).throwing(new com.mongodb.MongoException("Mongo unavailable!"))
+
+    get(s"/locations") {
+      status should equal(503)
+    }
+  }
+
 }
