@@ -15,7 +15,8 @@ object LocationProvider extends App with WebModule with DataModule {
   val webCtx = new WebAppContext()
   webCtx.setContextPath(config.getString("http.path"))
   webCtx.setResourceBase("/WEB-INF")
-  webCtx.addServlet(new ServletHolder(locationController), "/locations/*")
+  webCtx.addServlet(new ServletHolder("locations", locationController), "/locations/*")
+  webCtx.addServlet(new ServletHolder(documentationController), "/api-docs/*")
 
   server.setHandler(webCtx)
   server.start

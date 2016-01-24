@@ -6,6 +6,7 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.{DefaultFormats, Formats, _}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FlatSpecLike
+import org.scalatra.swagger.Swagger
 import org.scalatra.test.scalatest.ScalatraSuite
 
 class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFactory with LocationFixtures {
@@ -13,7 +14,8 @@ class LocationControllerSpec extends ScalatraSuite with FlatSpecLike with MockFa
   implicit val jsonFormats: Formats = DefaultFormats + Serializers.objectId
 
   val repository = mock[LocationRepository]
-  val controller = new LocationController(repository)
+  val swagger = new Swagger(Swagger.SpecVersion, "1.0.0", ApiInfo)
+  val controller = new LocationController(repository, swagger)
 
   addServlet(controller, "/locations/*")
 

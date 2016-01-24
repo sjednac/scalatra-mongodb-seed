@@ -31,6 +31,7 @@ libraryDependencies ++= {
         "com.typesafe"              %   "config"                      % configVersion,
         "org.scalatra"              %%  "scalatra"                    % scalatraVersion,
         "org.scalatra"              %%  "scalatra-json"               % scalatraVersion,
+        "org.scalatra"              %%  "scalatra-swagger"            % scalatraVersion,
         "org.scalatra"              %%  "scalatra-scalatest"          % scalatraVersion % "test",
         "org.json4s"                %%  "json4s-jackson"              % json4sVersion,
         "org.eclipse.jetty"         %   "jetty-server"                % jettyVersion,

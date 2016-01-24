@@ -86,6 +86,11 @@ Check if everything works correctly by fetching the list of locations:
 
     curl -v http://$(docker-machine ip service1):8080/locations
 
+## Swagger integration
+
+[Swagger](http://swagger.io/) should be integrated by default. Point [Swagger UI](http://petstore.swagger.io/?url=http://localhost:8080/api-docs/)
+ to [http://localhost:8080/api-docs/](http://localhost:8080/api-docs/) to interact with all exposed methods and to find out their specs.
+
 ## Links
 
 * [Working with Docker](http://docs.docker.com/introduction/working-with-docker/).
