@@ -51,6 +51,20 @@ libraryDependencies ++= {
 updateOptions := updateOptions.value.withCachedResolution(true)
 
 //
+// Scalariform
+//
+import scalariform.formatter.preferences._
+import com.typesafe.sbt.SbtScalariform._
+
+SbtScalariform.scalariformSettings
+
+ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  .setPreference(AlignSingleLineCaseStatements, true)
+  .setPreference(AlignSingleLineCaseStatements.MaxArrowIndent, 100)
+  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(DanglingCloseParenthesis, Preserve)
+
+//
 // Revolver
 //
 Revolver.settings:Seq[sbt.Setting[_]]

@@ -1,6 +1,6 @@
 package com.mintbeans.geo.web
 
-import com.mintbeans.geo.core.{Location, LocationRepository}
+import com.mintbeans.geo.core.{ Location, LocationRepository }
 import org.json4s._
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra._
@@ -36,10 +36,10 @@ class LocationController(locationRepo: LocationRepository, implicit val swagger:
 
   get("/", operation(list)) {
     params.getAsOrElse[Int]("limit", maxAllowedLimit) match {
-      case limit if limit <= 0 => BadRequest("Limit must be a positive integer.")
+      case limit if limit <= 0              => BadRequest("Limit must be a positive integer.")
       case limit if limit > maxAllowedLimit => BadRequest(s"Maximum allowed limit: ${maxAllowedLimit}")
       case limit => {
-        if(params.isDefinedAt("name"))
+        if (params.isDefinedAt("name"))
           locationRepo.byNameFragment(params("name"), Some(limit))
         else if (params.isDefinedAt("phrase"))
           locationRepo.byTextPhrase(params("phrase"), Some(limit))
@@ -52,7 +52,7 @@ class LocationController(locationRepo: LocationRepository, implicit val swagger:
   get("/:id", operation(byId)) {
     locationRepo.byId(new org.bson.types.ObjectId(params("id"))) match {
       case Some(l) => Ok(l)
-      case None => NotFound(s"Location not found: ${params("id")}")
+      case None    => NotFound(s"Location not found: ${params("id")}")
     }
   }
 

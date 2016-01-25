@@ -1,14 +1,14 @@
 package com.mintbeans.geo.data
 
-import com.github.simplyscala.{MongoEmbedDatabase, MongodProps}
-import com.mintbeans.geo.core.{Location, LocationFixtures}
+import com.github.simplyscala.{ MongoEmbedDatabase, MongodProps }
+import com.mintbeans.geo.core.{ Location, LocationFixtures }
 import com.mongodb.DBObject
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoClient
 import com.novus.salat._
 import de.flapdoodle.embed.mongo.distribution.Version
 import org.bson.types.ObjectId
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbedDatabase with SalatContext {
 
@@ -22,7 +22,7 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
     def withMongo(fixture: MongodProps => Any) = withEmbedMongoFixture(port = mongoPort, version = Version.V2_6_1)(fixture)
 
     def withLocations(names: String*)(testFun: => Unit) = new LocationFixtures {
-      locations(names:_*).foreach({ l =>
+      locations(names: _*).foreach({ l =>
         collection.insert(grater[Location].asDBObject(l), WriteConcern.Safe)
       })
 
@@ -39,7 +39,7 @@ class MongoLocationRepositorySpec extends FlatSpec with Matchers with MongoEmbed
 
     def withTextIndex(field: String)(testFun: => Unit) = {
       collection.createIndex(MongoDBObject(field -> "text"))
-      collection.indexInfo.exists( idx => idx.get("key").asInstanceOf[DBObject].toMap.values().contains("text")) should be (true)
+      collection.indexInfo.exists(idx => idx.get("key").asInstanceOf[DBObject].toMap.values().contains("text")) should be(true)
 
       testFun
     }
